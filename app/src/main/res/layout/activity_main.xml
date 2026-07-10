@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Main layout:
+      - PreviewView fills the screen (camera feed).
+      - GuideOverlayView draws the template lines on top of the preview.
+      - A bottom bar holds three car-type chips and a capture button.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark">
+
+    <!-- Camera preview -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:scaleType="fillCenter" />
+
+    <!-- Guide overlay (drawn on top of camera) -->
+    <com.example.carguide.GuideOverlayView
+        android:id="@+id/guideOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Bottom control bar -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="#A6000000"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/select_type"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:singleSelection="true"
+            app:selectionRequired="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCitadine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_citadine"
+                style="@style/Widget.Material3.Chip.Filter" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBerline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_berline"
+                style="@style/Widget.Material3.Chip.Filter" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSuv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_suv"
+                style="@style/Widget.Material3.Chip.Filter" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCapture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="@string/capture"
+            android:textSize="16sp"
+            android:icon="@android:drawable/ic_menu_camera"
+            android:iconGravity="textStart"
+            app:backgroundTint="@color/btn_capture" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:text="" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
