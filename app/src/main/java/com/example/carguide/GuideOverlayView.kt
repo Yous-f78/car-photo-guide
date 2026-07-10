@@ -66,16 +66,38 @@ class GuideOverlayView @JvmOverloads constructor(
         super.onDraw(canvas)
         if (width == 0 || height == 0) return
 
-        val fw = width * carType.widthRatio
-        val fh = height * carType.heightRatio
-        val left = (width - fw) / 2f
-        val top  = (height - fh) / 2f
+        // The camera preview uses 4:3 aspect ratio with fitCenter, so on a
+        // widescreen display the preview doesn't fill the entire screen.
+        // We compute the actual preview area so the overlay stays inside it.
+        val previewW: Float
+        val previewH: Float
+        if (width.toFloat() / height > 4f / 3f) {
+            // Screen is wider than 4:3 -> preview is height-constrained
+            previewH = height.toFloat()
+            previewW = previewH * 4f / 3f
+        } else {
+            // Screen is taller than 4:3 -> preview is width-constrained
+            previewW = width.toFloat()
+            previewH = previewW * 3f / 4f
+        }
+        val previewLeft = (width - previewW) / 2f
+        val previewTop = (height - previewH) / 2f
+
+        // Guide frame dimensions, relative to the preview area (not the screen).
+        val fw = previewW * carType.widthRatio
+        val fh = previewH * carType.heightRatio
+        val left = previewLeft + (previewW - fw) / 2f
+        val top  = previewTop + (previewH - fh) / 2f
         val rect = RectF(left, top, left + fw, top + fh)
 
-        // 1. Darken everything outside the frame (top/bottom/left/right strips).
+        // 1. Darken everything outside the frame.
+        // Top strip (full screen width, from top to frame top).
         canvas.drawRect(0f, 0f, width.toFloat(), top, outsidePaint)
+        // Bottom strip.
         canvas.drawRect(0f, top + fh, width.toFloat(), height.toFloat(), outsidePaint)
+        // Left strip.
         canvas.drawRect(0f, top, left, top + fh, outsidePaint)
+        // Right strip.
         canvas.drawRect(left + fw, top, width.toFloat(), top + fh, outsidePaint)
 
         // 2. Semi-transparent fill inside the frame.
@@ -84,9 +106,9 @@ class GuideOverlayView @JvmOverloads constructor(
         // 3. Bright border.
         canvas.drawRect(rect, borderPaint)
 
-        // 4. Center crosshair.
-        val cx = width / 2f
-        val cy = height / 2f
+        // 4. Center crosshair (center of the preview area, not the screen).
+        val cx = previewLeft + previewW / 2f
+        val cy = previewTop + previewH / 2f
         val arm = 40f
         canvas.drawLine(cx - arm, cy, cx + arm, cy, crossPaint)
         canvas.drawLine(cx, cy - arm, cx, cy + arm, crossPaint)
