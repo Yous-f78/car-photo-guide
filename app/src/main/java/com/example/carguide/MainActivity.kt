@@ -88,16 +88,18 @@ class MainActivity : AppCompatActivity() {
         providerFuture.addListener({
             val provider = providerFuture.get()
 
-            // 4:3 aspect ratio to match the client's photo standard.
+            // 4:3 aspect ratio on preview so the overlay matches what the user sees.
             val preview = Preview.Builder()
                 .setTargetAspectRatio(AspectRatio.RATIO_4_3)
                 .build().also {
                     it.setSurfaceProvider(binding.previewView.surfaceProvider)
                 }
 
+            // ImageCapture: NO aspect ratio constraint -> uses full sensor resolution.
+            // Set JPEG quality to 100 for maximum fidelity.
             imageCapture = ImageCapture.Builder()
-                .setTargetAspectRatio(AspectRatio.RATIO_4_3)
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+                .setJpegQuality(100)
                 .build()
 
             try {

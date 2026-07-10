@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Main layout:
-      - PreviewView fills the screen (camera feed).
-      - GuideOverlayView draws the template lines on top of the preview.
-      - A bottom bar holds three car-type chips and a capture button.
+    Main layout (landscape):
+      - Left side: camera preview + guide overlay (4:3, fillCenter)
+      - Right side: vertical control panel (car-type chips, capture, status)
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,27 +11,39 @@
     android:layout_height="match_parent"
     android:background="@color/bg_dark">
 
-    <!-- Camera preview -->
+    <!-- ======================== LEFT: CAMERA ======================== -->
+    <!-- Camera preview (left side, fills available space) -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        app:scaleType="fitCenter" />
+        app:scaleType="fillCenter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/controlPanel"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- Guide overlay (drawn on top of camera) -->
+    <!-- Guide overlay (same bounds as the preview) -->
     <com.example.carguide.GuideOverlayView
         android:id="@+id/guideOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="@id/previewView"
+        app:layout_constraintEnd_toEndOf="@id/previewView"
+        app:layout_constraintTop_toTopOf="@id/previewView"
+        app:layout_constraintBottom_toBottomOf="@id/previewView" />
 
-    <!-- Bottom control bar -->
+    <!-- ======================== RIGHT: CONTROL PANEL ======================== -->
     <LinearLayout
-        android:id="@+id/bottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/controlPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="#A6000000"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="#E6000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
@@ -50,7 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:singleSelection="true"
-            app:selectionRequired="true">
+            app:selectionRequired="true"
+            app:chipSpacingVertical="4dp">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipCitadine"
@@ -79,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="20dp"
             android:text="@string/capture"
             android:textSize="16sp"
             android:icon="@android:drawable/ic_menu_camera"
@@ -91,9 +103,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:textColor="@color/white"
-            android:textSize="12sp"
-            android:text="" />
+            android:textSize="11sp"
+            android:text=""
+            android:maxWidth="200dp"
+            android:maxLines="2"
+            android:ellipsize="end" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
