@@ -83,7 +83,7 @@
             android:text="@string/capture"
             android:textSize="16sp"
             android:icon="@android:drawable/ic_menu_camera"
-            android:iconGravity="textStart"
+            app:iconGravity="textStart"
             app:backgroundTint="@color/btn_capture" />
 
         <TextView
